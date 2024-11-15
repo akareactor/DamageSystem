@@ -1,0 +1,18 @@
+{
+	"name": "space.kulibin.damagesystem",
+	"version": "1.0.0",
+	"displayName": "Kulibin Damage System",
+	"description": "This is a damage facility",
+	"author": {
+		"name": "Kulibin.Space",
+		"email": "akareactor@mail.ru",
+		"url": "https://www.kulibin.space"
+	},
+	"samples": [
+		{
+			"displayName": "Demo",
+			"description": "Contains sample scene",
+			"path": "Samples~/Demo"
+		}
+	]
+}
