@@ -43,9 +43,9 @@ namespace KulibinSpace.DamageSystem {
             transform.rotation = Quaternion.LookRotation(forward, up);
         }
 
-        void OnValidate () {
-            dr = GetComponentInParent<DamageReceiver>();
-        }
+//        void OnValidate () {
+//            dr = GetComponentInParent<DamageReceiver>();
+//        }
 
     }
 
