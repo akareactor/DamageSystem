@@ -46,8 +46,21 @@ namespace KulibinSpace.DamageSystem {
         }
 
         // 2025-09-06 12:07:05 сервисная функция починки
+        /// <summary>
+        /// Увеличить значение стойкости на указанную величину
+        /// </summary>
+        /// <param name="val">Инкремент</param>
         public void RestoreDurability (float val) {
             durability += val;
+            if (durability > durabilityMax) durability = durabilityMax;
+        }
+
+        /// <summary>
+        /// Увеличить значение стойкости до указанной величины
+        /// </summary>
+        /// <param name="val">Пороговое значение</param>
+        public void RestoreDurabilityTo (float val) {
+            durability = val;
             if (durability > durabilityMax) durability = durabilityMax;
         }
 
