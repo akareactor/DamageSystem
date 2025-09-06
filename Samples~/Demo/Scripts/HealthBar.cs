@@ -10,37 +10,49 @@ namespace KulibinSpace.DamageSystem {
         MaterialPropertyBlock matBlock;
         MeshRenderer meshRenderer;
         public DamageReceiver dr;
-        bool first = true;
+        bool wasEnabled; // чтоб не дёргать каждый раз свойство meshRenderer.enabled
         public float activationThreshold = 0.9f; // 13:40 14.08.2021 порог активации, чтоб включался не сразу, т.к. сначала включается щит
+        Camera cam;
 
         void Awake () {
             meshRenderer = GetComponent<MeshRenderer>();
             matBlock = new MaterialPropertyBlock();
+            wasEnabled = meshRenderer.enabled;
+        }
+
+        void OnEnable () {
+            cam = Camera.main;
         }
 
         void Update () {
             // Only display on partial health
-            if (dr.durability < dr.durabilityMax * activationThreshold) {
+            if (dr.Durability < dr.durabilityMax * activationThreshold) {
                 //print(dr.durability + ", " + dr.durabilityMax);
-                if (first) { meshRenderer.enabled = true; first = false; }
+                if (!wasEnabled) { meshRenderer.enabled = true; wasEnabled = true; }
                 AlignCamera();
                 UpdateParams();
-                if (dr.durability == 0) gameObject.SetActive(false); // 16:00 21.09.2021 почему-то при откачке щита это не срабатывает.
+                if (dr.Durability == 0) gameObject.SetActive(false); // 16:00 21.09.2021 почему-то при откачке щита это не срабатывает.
+            } else { // 2025-09-06 11:49:14 если вдруг починили выше порога activationThreshold
+                if (wasEnabled) { meshRenderer.enabled = false; wasEnabled = false; }
             }
         }
 
         void UpdateParams () {
             meshRenderer.GetPropertyBlock(matBlock);
-            matBlock.SetFloat("_Fill", dr.durability / dr.durabilityMax);
+            matBlock.SetFloat("_Fill", dr.Durability / dr.durabilityMax);
             meshRenderer.SetPropertyBlock(matBlock);
         }
 
         void AlignCamera () {
-            var camXform = Camera.main.transform;
-            var forward = transform.position - camXform.position;
-            forward.Normalize();
-            var up = Vector3.Cross(forward, camXform.right);
-            transform.rotation = Quaternion.LookRotation(forward, up);
+            if (cam) {
+                var camXform = cam.transform;
+                var forward = transform.position - camXform.position;
+                forward.Normalize();
+                var up = Vector3.Cross(forward, camXform.right);
+                transform.rotation = Quaternion.LookRotation(forward, up);
+            } else {
+                cam = Camera.main;
+            }
         }
 
 //        void OnValidate () {

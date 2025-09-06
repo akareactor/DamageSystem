@@ -42,7 +42,7 @@ namespace KulibinSpace.DamageSystem {
 			if (!root) root = transform;
 			DamagePart[] damageParts = root.GetComponentsInChildren<DamagePart>(true); // отыскивает рекурсивно!
 			wholeDurability = 0; // значение wholeDurability соответствует сумме damageParts, там значения тысячи и десятки тысяч - для физики
-			foreach (DamagePart dp in damageParts) wholeDurability += dp.durability;
+			foreach (DamagePart dp in damageParts) wholeDurability += dp.Durability;
 			foreach (DamagePart dp in damageParts) dp.wholeDurability = wholeDurability;
 			Reset();
 		}
