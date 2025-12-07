@@ -50,7 +50,7 @@ namespace KulibinSpace.DamageSystem {
         /// Увеличить значение стойкости на указанную величину
         /// </summary>
         /// <param name="val">Инкремент</param>
-        public void RestoreDurability (float val) {
+        public virtual void RestoreDurability (float val) {
             durability += val;
             if (durability > durabilityMax) durability = durabilityMax;
         }
@@ -59,7 +59,7 @@ namespace KulibinSpace.DamageSystem {
         /// Увеличить значение стойкости до указанной величины
         /// </summary>
         /// <param name="val">Пороговое значение</param>
-        public void RestoreDurabilityTo (float val) {
+        public virtual void RestoreDurabilityTo (float val) {
             durability = val;
             if (durability > durabilityMax) durability = durabilityMax;
         }
