@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace KulibinSpace.DamageSystem {
 
@@ -16,6 +16,7 @@ namespace KulibinSpace.DamageSystem {
         public float minViewDistance = 45f;      // 2025-09-16 включение ближе этой дистанции
         public float maxViewDistance = 50f;      // 2025-09-16 выключение дальше этой дистанции
         Camera cam;
+        public Vector3 worldOffset = new Vector3(0f, 2f, 0f);
 
         void Awake () {
             meshRenderer = GetComponent<MeshRenderer>();
@@ -23,11 +24,19 @@ namespace KulibinSpace.DamageSystem {
             wasEnabled = meshRenderer.enabled;
         }
 
+
+        void PositionWorldUp () {
+            Transform parent = transform.parent;
+            Vector3 sideOffset = parent.right * worldOffset.x + parent.forward * worldOffset.z;
+            transform.position = parent.position + sideOffset + Vector3.up * worldOffset.y;
+        }
+
         void OnEnable () {
             cam = Camera.main;
         }
 
-        void Update () {
+        //void Update () {
+        void LateUpdate () {
             if (!cam) {
                 cam = Camera.main;
                 return;
@@ -37,12 +46,13 @@ namespace KulibinSpace.DamageSystem {
 
             // Only display on partial health and within distance
             bool withinHealth = dr.Durability < dr.durabilityMax * activationThreshold;
-            bool withinDistance = wasEnabled 
+            bool withinDistance = wasEnabled
                 ? distance <= maxViewDistance   // уже включена — держим до max
                 : distance <= minViewDistance;  // выключена — включаем только ближе min
 
             if (withinHealth && withinDistance) {
                 if (!wasEnabled) { meshRenderer.enabled = true; wasEnabled = true; }
+                PositionWorldUp();
                 AlignCamera();
                 UpdateParams();
                 if (dr.Durability == 0) gameObject.SetActive(false); // 16:00 21.09.2021 почему-то при откачке щита это не срабатывает.
@@ -74,9 +84,9 @@ namespace KulibinSpace.DamageSystem {
             }
         }
 
-//        void OnValidate () {
-//            dr = GetComponentInParent<DamageReceiver>();
-//        }
+        //        void OnValidate () {
+        //            dr = GetComponentInParent<DamageReceiver>();
+        //        }
 
     }
 
